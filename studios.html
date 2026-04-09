@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Студии — МапДев Вики</title>
+  <link rel="icon" type="image/jpeg" href="fav.jpg">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── page layout ── */
+    .wiki-page {
+      padding-top: var(--hh);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .wiki-header {
+      padding: 48px 40px 32px;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .wiki-header h1 {
+      font-size: clamp(24px, 4vw, 40px);
+      color: var(--text);
+      opacity: 0; animation: fadeUp .6s ease forwards;
+    }
+    .wiki-header p {
+      font-size: 11px; color: var(--text2);
+      margin-top: 10px; letter-spacing: .04em;
+      opacity: 0; animation: fadeUp .6s ease .15s forwards;
+    }
+    .wiki-divider {
+      height: 1px;
+      background: var(--border);
+      max-width: 1100px; margin: 0 auto 40px;
+      width: calc(100% - 80px);
+    }
+
+    /* ── cards grid ── */
+    .cards-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 28px;
+      padding: 0 40px 80px;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ══ STUDIO CARD ══ */
+    .studio-card {
+      width: 300px;
+      background: var(--card);
+      border: 1px solid var(--border2);
+      border-radius: 14px;
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: transform .2s ease, box-shadow .2s ease;
+      cursor: default;
+      opacity: 0;
+      animation: fadeUp .7s ease .2s forwards;
+    }
+    .studio-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 0 32px var(--glow), 0 8px 32px rgba(0,0,0,.5);
+    }
+
+    /* floating cubes canvas behind card content */
+    .card-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: .55;
+    }
+
+    .card-inner { position: relative; z-index: 1; }
+
+    /* card logo row */
+    .card-logo-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .card-logo {
+      width: 52px; height: 52px;
+      border-radius: 8px;
+      object-fit: cover;
+      image-rendering: pixelated;
+      flex-shrink: 0;
+      border: 1px solid var(--border2);
+    }
+    .card-name {
+      font-size: 17px;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .card-type-tag {
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-top: 3px;
+      opacity: .8;
+    }
+
+    /* description */
+    .card-desc {
+      font-size: 10px;
+      color: var(--text2);
+      line-height: 1.75;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card-desc span.label {
+      font-size: 9px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      opacity: .7;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    /* read more button */
+    .card-read-btn {
+      display: inline-block;
+      font-family: var(--font);
+      font-size: 10px;
+      letter-spacing: .07em;
+      padding: 8px 18px;
+      border: 1px solid var(--border2);
+      border-radius: 5px;
+      color: var(--accent);
+      text-decoration: none;
+      background: transparent;
+      cursor: pointer;
+      transition: background .15s, transform .15s, box-shadow .15s;
+      margin-top: auto;
+      align-self: flex-start;
+    }
+    .card-read-btn:hover {
+      background: var(--accent);
+      color: #fff;
+      transform: scale(1.05);
+      box-shadow: 0 0 14px var(--glow);
+    }
+
+    @media (max-width: 680px) {
+      .cards-grid { padding: 0 18px 60px; }
+      .wiki-header { padding: 36px 18px 24px; }
+      .studio-card { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-logo">
+    <img src="medele.png" alt="logo" class="logo-img" id="logoImg">
+    <span class="logo-text" id="logoText" data-default="МапДев Вики" data-hover="кто кто?">МапДев Вики</span>
+  </div>
+  <nav class="header-nav">
+    <a href="authors.html"  class="nav-btn" data-sound>Авторы</a>
+    <a href="bloggers.html" class="nav-btn" data-sound>Блогеры</a>
+    <a href="studios.html"  class="nav-btn" data-sound>Студии</a>
+  </nav>
+  <button class="theme-toggle" id="themeToggle" data-sound><span class="theme-icon">🌙</span></button>
+</header>
+
+<div class="wiki-page">
+  <div class="wiki-header">
+    <h1>Студии</h1>
+    <p>Команды и организации ру мапдева</p>
+  </div>
+  <div class="wiki-divider"></div>
+
+  <div class="cards-grid">
+
+    <!-- ══ КУБИ КАРТЫ ══ -->
+    <div class="studio-card" id="cubiCard">
+      <canvas class="card-canvas" id="cubiCanvas"></canvas>
+      <div class="card-inner">
+        <div class="card-logo-row">
+          <img src="cubikarti.png" class="card-logo" alt="Куби Карты">
+          <div>
+            <div class="card-name">Куби карты</div>
+            <div class="card-type-tag">Студия • Карты</div>
+          </div>
+        </div>
+        <div class="card-desc">
+          <span class="label">описание</span>
+          Привет. Мы команда КубиКарты и занимаемся... Картами, думаю логично. Наши карты на любой вкус и цвет, но по большей части это либо аркада, либо сюжет, либо рогалик....
+        </div>
+        <a href="studio-cubikarti.html" class="card-read-btn" data-sound>Читать больше →</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="site-footer">
+  <span class="footer-copy">© МапДев Вики — фан-проект</span>
+  <a href="https://medele857.github.io/medele/" target="_blank" class="footer-about" data-sound>О нас</a>
+</footer>
+
+<audio id="galochkaAudio" src="galochka.mp3" preload="auto"></audio>
+<script src="script.js"></script>
+<script>
+  // ── Floating cubes on CubiKarti card ──
+  (function() {
+    var canvas = document.getElementById('cubiCanvas');
+    var card   = document.getElementById('cubiCard');
+    if (!canvas || !card) return;
+
+    var ctx = canvas.getContext('2d');
+
+    function resize() {
+      canvas.width  = card.offsetWidth;
+      canvas.height = card.offsetHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // detect theme accent color
+    function accentColor() {
+      var theme = document.documentElement.dataset.theme;
+      return theme === 'light' ? '#52a81e' : '#9b5ff0';
+    }
+
+    var cubes = [];
+    var N = 18;
+    for (var i = 0; i < N; i++) {
+      cubes.push({
+        x:  Math.random() * 300,
+        y:  Math.random() * 200,
+        s:  4 + Math.random() * 8,        // size
+        vx: (Math.random() - .5) * .4,
+        vy: -0.3 - Math.random() * .5,    // float upward
+        a:  Math.random() * Math.PI * 2,  // rotation angle
+        va: (Math.random() - .5) * .02,   // rotation speed
+        op: 0.15 + Math.random() * 0.35,
+      });
+    }
+
+    function drawCube(x, y, s, angle, op, color) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+      ctx.globalAlpha = op;
+      // face
+      ctx.fillStyle = color;
+      ctx.fillRect(-s/2, -s/2, s, s);
+      // top face (isometric illusion)
+      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      ctx.beginPath();
+      ctx.moveTo(-s/2, -s/2);
+      ctx.lineTo(0, -s/2 - s*0.4);
+      ctx.lineTo(s/2, -s/2);
+      ctx.lineTo(-s/2, -s/2);
+      ctx.fill();
+      // right face
+      ctx.fillStyle = 'rgba(0,0,0,0.3)';
+      ctx.beginPath();
+      ctx.moveTo(s/2, -s/2);
+      ctx.lineTo(s/2 + s*0.4, -s/2 + s*0.2);
+      ctx.lineTo(s/2 + s*0.4, s/2 + s*0.2);
+      ctx.lineTo(s/2, s/2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function tick() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      var color = accentColor();
+      var W = canvas.width, H = canvas.height;
+
+      cubes.forEach(function(c) {
+        c.x += c.vx;
+        c.y += c.vy;
+        c.a += c.va;
+        // wrap around
+        if (c.y + c.s < 0) { c.y = H + c.s; c.x = Math.random() * W; }
+        if (c.x < -c.s)    c.x = W + c.s;
+        if (c.x > W + c.s) c.x = -c.s;
+        drawCube(c.x, c.y, c.s, c.a, c.op, color);
+      });
+      requestAnimationFrame(tick);
+    }
+    tick();
+  })();
+</script>
+</body>
+</html>
